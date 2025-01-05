@@ -1,3 +1,6 @@
+# don't compromse the security of your project by committing sensitive information
+config.json
+
 # Logs
 logs
 *.log
