@@ -1,22 +1,24 @@
-// index.js file to connect to discord api
 const {
   Client,
   Events,
-  GatewayIntentBits,
+  IntentsBitField,
   REST,
   Routes,
+  GatewayIntentBits,
 } = require("discord.js");
 const { token, clientId } = require("./config.json");
 const wordle = require("./wordle.js");
 
-// Create a new client instance
+// // Use the integer bitfield to configure intents
+// const intents = new IntentsBitField(1689934340028512);
+
+// Configure minimal intents
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
+  intents: [GatewayIntentBits.Guilds], // Only guild-related events required for slash commands
 });
+
+// // Create a new client instance
+// const client = new Client({ intents });
 
 // Register slash commands
 const commands = [
@@ -29,11 +31,25 @@ const commands = [
         type: 1, // Subcommand
         description: "Start a Wordle game",
       },
+      {
+        name: "guess",
+        type: 1, // Subcommand
+        description: "Make a guess in Wordle",
+        options: [
+          {
+            name: "word",
+            type: 3, // String type
+            description: "Your 5-letter guess",
+            required: true,
+          },
+        ],
+      },
     ],
   },
 ];
 
 const rest = new REST({ version: "10" }).setToken(token);
+
 (async () => {
   try {
     console.log("Started refreshing application (/) commands.");
@@ -46,7 +62,7 @@ const rest = new REST({ version: "10" }).setToken(token);
   }
 })();
 
-// When the client is ready, run this code (only once).
+// When the client is ready, run this code (only once)
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
@@ -62,6 +78,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
     if (subcommand === "wordle") {
       await wordle.startWordle(interaction);
+    } else if (subcommand === "guess") {
+      const guess = options.getString("word");
+      await wordle.handleGuess(interaction, guess);
     }
   }
 });
