@@ -1,4 +1,4 @@
-// index.js
+// index.js file to connect to discord api
 const {
   Client,
   Events,

@@ -1,4 +1,4 @@
-// wordle.js
+// wordle.js file for gameplay logic
 const { readFileSync } = require("fs");
 const axios = require("axios");
 
