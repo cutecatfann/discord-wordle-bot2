@@ -41,6 +41,19 @@ I first created a Wordle bot in C++ when I was just starting out as a developer.
    Replace `YOUR_CLIENT_ID` with your bot’s client ID.
    - You will need to run it again every time if you change any `slash` commands
 4. Install dependencies: `npm install`.
+5. Create a `config.json` file in the root and add in your secrets from Discord Developer:
+```javascript
+{
+  "token": "",
+  "clientId": ""
+}
+
+```
+6. Create a `.env` file as well and add in your Discord token:
+```javascript
+DISCORD_TOKEN=""
+
+```
 5. Start the bot: `node index.js`.
 
 ---
