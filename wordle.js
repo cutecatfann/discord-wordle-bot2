@@ -1,7 +1,6 @@
 const { readFileSync } = require("fs");
 const axios = require("axios");
-
-const activeGames = new Map();
+const { activeGames } = require("./gameState");
 
 const getRandomWord = () => {
   const words = readFileSync("5letterwords.txt", "utf-8")
@@ -46,7 +45,7 @@ const startWordle = async (interaction, maxGuesses, showHistory) => {
   if (activeGames.has(userId)) {
     await interaction.reply({
       content: "You already have an active Wordle game!",
-      ephemeral: true,
+      flags: 64, // Ephemeral
     });
     return;
   }
