@@ -11,7 +11,6 @@ I plan on making it so that users have the option to use the Odd
 - update number of guesses
 - size of word?
 urban dictionary
-select odd words
 select number of characters
 code reuse
 
