@@ -1,11 +1,8 @@
-// wordle.js file for gameplay logic
 const { readFileSync } = require("fs");
 const axios = require("axios");
 
-// Wordle Game State
 const activeGames = new Map();
 
-// Wordle Helper Functions
 const getRandomWord = () => {
   const words = readFileSync("5letterwords.txt", "utf-8")
     .split(/\r?\n/)
@@ -17,11 +14,11 @@ const evaluateGuess = (word, guess) => {
   let result = "";
   for (let i = 0; i < word.length; i++) {
     if (guess[i] === word[i]) {
-      result += "🟩"; // Correct letter and position
+      result += "🟩";
     } else if (word.includes(guess[i])) {
-      result += "🟨"; // Correct letter, wrong position
+      result += "🟨";
     } else {
-      result += "⬜"; // Incorrect letter
+      result += "⬜";
     }
   }
   return result;
@@ -36,8 +33,7 @@ const fetchWordDefinition = async (word) => {
     if (!meanings || meanings.length === 0) {
       return "No definition found.";
     }
-    const definition = meanings[0]?.definitions[0]?.definition;
-    return definition || "No definition found.";
+    return meanings[0]?.definitions[0]?.definition || "No definition found.";
   } catch (error) {
     console.error("Error fetching definition:", error);
     return "Unable to fetch definition at this time.";
@@ -56,7 +52,12 @@ const startWordle = async (interaction) => {
   }
 
   const word = getRandomWord();
-  activeGames.set(userId, { word, guesses: [], maxAttempts: 6 });
+  activeGames.set(userId, {
+    word,
+    guesses: [],
+    maxAttempts: 6,
+    showHistory: false,
+  });
 
   await interaction.reply({
     content:
@@ -72,7 +73,7 @@ const handleGuess = async (interaction, guess) => {
   if (!game) {
     await interaction.reply({
       content:
-        "You don't have an active Wordle game. Start one with `/funbot wordle`.",
+        "You don't have an active Wordle game. Start one with `/wordle`.",
       ephemeral: true,
     });
     return;
@@ -88,9 +89,11 @@ const handleGuess = async (interaction, guess) => {
 
   game.guesses.push(guess);
   const feedback = evaluateGuess(game.word, guess);
+  const history = game.showHistory
+    ? `Previous guesses:\n${game.guesses.join("\n")}`
+    : "";
 
   if (guess === game.word) {
-    game.isActive = false;
     const definition = await fetchWordDefinition(game.word);
     await interaction.reply({
       content: `Congratulations! You guessed the word: ${game.word}\nDefinition: ${definition}`,
@@ -98,7 +101,6 @@ const handleGuess = async (interaction, guess) => {
     });
     activeGames.delete(userId);
   } else if (game.guesses.length >= game.maxAttempts) {
-    game.isActive = false;
     const definition = await fetchWordDefinition(game.word);
     await interaction.reply({
       content: `Game over! The correct word was: ${game.word}\nDefinition: ${definition}`,
@@ -107,7 +109,7 @@ const handleGuess = async (interaction, guess) => {
     activeGames.delete(userId);
   } else {
     await interaction.reply({
-      content: `Guess result: ${feedback}\nAttempts left: ${
+      content: `Guess result for "${guess}": ${feedback}\n${history}\nAttempts left: ${
         game.maxAttempts - game.guesses.length
       }`,
       ephemeral: true,
@@ -115,4 +117,47 @@ const handleGuess = async (interaction, guess) => {
   }
 };
 
-module.exports = { startWordle, handleGuess };
+const setMaxGuesses = async (interaction, maxGuesses) => {
+  const userId = interaction.user.id;
+
+  if (!activeGames.has(userId)) {
+    await interaction.reply({
+      content:
+        "You don't have an active game to configure. Start one with `/wordle`.",
+      ephemeral: true,
+    });
+    return;
+  }
+
+  activeGames.get(userId).maxAttempts = maxGuesses;
+  await interaction.reply({
+    content: `Max guesses set to ${maxGuesses}.`,
+    ephemeral: true,
+  });
+};
+
+const toggleGuessHistory = async (interaction, enabled) => {
+  const userId = interaction.user.id;
+
+  if (!activeGames.has(userId)) {
+    await interaction.reply({
+      content:
+        "You don't have an active game to configure. Start one with `/wordle`.",
+      ephemeral: true,
+    });
+    return;
+  }
+
+  activeGames.get(userId).showHistory = enabled;
+  await interaction.reply({
+    content: `Guess history is now ${enabled ? "enabled" : "disabled"}.`,
+    ephemeral: true,
+  });
+};
+
+module.exports = {
+  startWordle,
+  handleGuess,
+  setMaxGuesses,
+  toggleGuessHistory,
+};
