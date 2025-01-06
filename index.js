@@ -15,7 +15,21 @@ const client = new Client({
 const commands = [
   {
     name: "wordle",
-    description: "Play a Wordle game!",
+    description: "Start a Wordle game",
+    options: [
+      {
+        name: "maxguesses",
+        type: 4, // Integer type
+        description: "Maximum number of guesses allowed",
+        required: false,
+      },
+      {
+        name: "showhistory",
+        type: 5, // Boolean type
+        description: "Enable or disable showing guess history",
+        required: false,
+      },
+    ],
   },
   {
     name: "guess",
@@ -25,30 +39,6 @@ const commands = [
         name: "word",
         type: 3, // String type
         description: "Your 5-letter guess",
-        required: true,
-      },
-    ],
-  },
-  {
-    name: "setguesses",
-    description: "Set the number of guesses per game",
-    options: [
-      {
-        name: "number",
-        type: 4, // Integer type
-        description: "Maximum number of guesses allowed",
-        required: true,
-      },
-    ],
-  },
-  {
-    name: "showhistory",
-    description: "Toggle showing all previous guesses during the game",
-    options: [
-      {
-        name: "enabled",
-        type: 5, // Boolean type
-        description: "Enable or disable guess history",
         required: true,
       },
     ],
@@ -77,16 +67,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const { commandName, options } = interaction;
 
   if (commandName === "wordle") {
-    await wordle.startWordle(interaction);
+    const maxGuesses = options.getInteger("maxguesses") || 6; // Default to 6 guesses
+    const showHistory = options.getBoolean("showhistory") || false; // Default to false
+    await wordle.startWordle(interaction, maxGuesses, showHistory);
   } else if (commandName === "guess") {
     const guess = options.getString("word");
     await wordle.handleGuess(interaction, guess);
-  } else if (commandName === "setguesses") {
-    const maxGuesses = options.getInteger("number");
-    await wordle.setMaxGuesses(interaction, maxGuesses);
-  } else if (commandName === "showhistory") {
-    const enabled = options.getBoolean("enabled");
-    await wordle.toggleGuessHistory(interaction, enabled);
   }
 });
 

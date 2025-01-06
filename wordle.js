@@ -40,7 +40,7 @@ const fetchWordDefinition = async (word) => {
   }
 };
 
-const startWordle = async (interaction) => {
+const startWordle = async (interaction, maxGuesses, showHistory) => {
   const userId = interaction.user.id;
 
   if (activeGames.has(userId)) {
@@ -55,13 +55,14 @@ const startWordle = async (interaction) => {
   activeGames.set(userId, {
     word,
     guesses: [],
-    maxAttempts: 6,
-    showHistory: false,
+    maxAttempts: maxGuesses,
+    showHistory,
   });
 
   await interaction.reply({
-    content:
-      "Wordle game started! Use `/guess <word>` to make your first guess.",
+    content: `Wordle game started! Use \`/guess <word>\` to make your first guess.\nMax guesses: ${maxGuesses}\nGuess history: ${
+      showHistory ? "Enabled" : "Disabled"
+    }`,
     ephemeral: true,
   });
 };
@@ -117,47 +118,4 @@ const handleGuess = async (interaction, guess) => {
   }
 };
 
-const setMaxGuesses = async (interaction, maxGuesses) => {
-  const userId = interaction.user.id;
-
-  if (!activeGames.has(userId)) {
-    await interaction.reply({
-      content:
-        "You don't have an active game to configure. Start one with `/wordle`.",
-      ephemeral: true,
-    });
-    return;
-  }
-
-  activeGames.get(userId).maxAttempts = maxGuesses;
-  await interaction.reply({
-    content: `Max guesses set to ${maxGuesses}.`,
-    ephemeral: true,
-  });
-};
-
-const toggleGuessHistory = async (interaction, enabled) => {
-  const userId = interaction.user.id;
-
-  if (!activeGames.has(userId)) {
-    await interaction.reply({
-      content:
-        "You don't have an active game to configure. Start one with `/wordle`.",
-      ephemeral: true,
-    });
-    return;
-  }
-
-  activeGames.get(userId).showHistory = enabled;
-  await interaction.reply({
-    content: `Guess history is now ${enabled ? "enabled" : "disabled"}.`,
-    ephemeral: true,
-  });
-};
-
-module.exports = {
-  startWordle,
-  handleGuess,
-  setMaxGuesses,
-  toggleGuessHistory,
-};
+module.exports = { startWordle, handleGuess };
