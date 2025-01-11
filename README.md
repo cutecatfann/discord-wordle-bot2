@@ -63,7 +63,7 @@ DISCORD_TOKEN=""
 Managing multiple users playing Wordle simultaneously requires multiple management of data. Instead of storing this data directly in individual command handlers, I created a shared GameState. This centralized state ensures consistency and lets all game variations (Wordle, CrazyWord, and more) operate smoothly. Furthermore, it is fast, which is a requirement for using Discord's API.
 
 ### WordleGame Class
-I noticed a lot of overlapping logic between Wordle and CrazyWord—things like evaluating guesses, fetching definitions, and handling game flow. So, I refactored that logic into a reusable WordleGame class. Now, any new game variations can inherit this functionality, reducing redundancy and keeping the code DRY. This makes the bot highly scalable for future updates. I plsan on adding a lot more to the code :)
+I noticed a lot of overlapping logic between Wordle and CrazyWord—things like evaluating guesses, fetching definitions, and handling game flow. So, I refactored that logic into a reusable WordleGame class. Now, any new game variations can inherit this functionality, reducing redundancy and keeping the code DRY. This makes the bot highly scalable for future updates. I plan on adding a lot more to the code :)
 
 ### Word Definition
 I do use the API from Free Dicitonary API for word defintions [link here](https://dictionaryapi.dev/). This isn't perfect, I notice a lot of missing definitions happen, but it is pretty good.
