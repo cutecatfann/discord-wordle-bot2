@@ -74,9 +74,9 @@ I do use the API from Free Dicitonary API for word defintions [link here](https:
 The words come from the [english-words](https://github.com/dwyl/english-words) repository. I parsed the master text file locally to create different word lists. Thank you, DWYL!
 
 ### Word Lists
-There are about 460k words in the English language, they are pretty much all included here. 
+There are about 460k words in the English language, they are all included here.
 
-However, since Discord has a 3 second API time out, I wanted to ensure that the lists of words were not overly large. Here are the counts of the included lists.
+However, since Discord has a 3 second API time out, I wanted to ensure that the lists of words were not overly large. 
 
 Feel free to run the count function in `word_parser.py` for the numbers yourself.
 
