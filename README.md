@@ -1,9 +1,9 @@
 # Discord Bot: Wordle + Wordle 2.0
 ## Mimi Pieper
 
-Welcome to  my project born out of nostalgia, love for Wordle, and way WAY too much time on Discord. This was created in just a couple of hours over a weekend, so if there are mistakes, please fix them! (or ignore them)
+Welcome! This was made by my love for Wordle, and way WAY too much time on Discord. This was created in just a couple of hours over a weekend, so if there are mistakes, please fix them! (or ignore them)
 
-This bot is perfect for anyone who loves Wordle and spends way too much time on Discord. For now, you’ll need to manually host it to run, but I might set it up for public use soon!
+This bot is perfect for anyone who loves Wordle and spends way too much time on Discord. For now, you will need to manually host it to run, but I might set it up for public use soon!
 
 ### Backstory (feel free to ignore)
 I first created a Wordle bot in C++ when I was just starting out as a developer. I looked back on it before starting this and frankly I'm shocked it ran. Now, I’ve recreated it in JavaScript with modern best practices, new features, and scalability in mind. I think it's really fun to look back how far I've come as a programmer. That project was daunting to me when I first started coding and took way too long. This, I banged out in just a few hours. I struggle at times to see how I improved and this was really cool to see.
